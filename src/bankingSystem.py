@@ -100,12 +100,14 @@ class Database:
             pass
 
     def add(self, account):
-        self.cursor.execute(f"INSERT INTO card VALUES ({account.ID}, {account.cardNumber}, \
+        self.cursor.execute(
+            f"INSERT INTO card VALUES ({account.ID}, {account.cardNumber}, \
             {account.pin}, {account.balance})")
         self.conn.commit()
 
     def get(self, cardNumber):
-        acc = self.cursor.execute(f"SELECT * FROM card WHERE number={cardNumber}").fetchone()
+        acc = self.cursor.execute(
+            f"SELECT * FROM card WHERE number={cardNumber}").fetchone()
         if acc:
             account = BankAccount()
             account.ID, account.cardNumber, account.pin, account.balance = acc
@@ -117,7 +119,8 @@ class Database:
         self.conn.commit()
 
     def updateBalance(self, number, balance):
-        self.cursor.execute(f"UPDATE card SET balance = {balance} WHERE number = {number}")
+        self.cursor.execute(
+            f"UPDATE card SET balance = {balance} WHERE number = {number}")
         self.conn.commit()
 
 
@@ -125,6 +128,7 @@ class BankingSystem:
     """
     Simple Banking System
     """
+
     def __init__(self):
         self.menu = Menu()
         self.db = Database()
@@ -161,7 +165,9 @@ class BankingSystem:
         print('\nEnter income:')
         income = int(input())
         self.current_account.balance += income
-        self.db.updateBalance(number=self.current_account.cardNumber, balance=self.current_account.balance)
+        self.db.updateBalance(
+            number=self.current_account.cardNumber,
+            balance=self.current_account.balance)
         print('Income was added!\n')
 
     def transfer(self):
@@ -173,11 +179,16 @@ class BankingSystem:
                 print("Enter how much money you want to transfer:")
                 transfer = int(input())
                 if self.current_account.balance >= transfer:
-                    self.db.updateBalance(number=number, balance=account.balance + transfer)
-                    print(f'>>> num: {self.current_account.cardNumber} bal: {self.current_account.balance}')
+                    self.db.updateBalance(
+                        number=number, balance=account.balance + transfer)
+                    print(
+                        f'>>> num: {self.current_account.cardNumber} bal: {self.current_account.balance}')
                     self.current_account.balance -= transfer
-                    self.db.updateBalance(self.current_account.cardNumber, self.current_account.balance)
-                    print(f'>>> num: {self.current_account.cardNumber} bal: {self.current_account.balance}')
+                    self.db.updateBalance(
+                        self.current_account.cardNumber,
+                        self.current_account.balance)
+                    print(
+                        f'>>> num: {self.current_account.cardNumber} bal: {self.current_account.balance}')
                     print('Success!\n')
                 else:
                     print('Not enough money!\n')
